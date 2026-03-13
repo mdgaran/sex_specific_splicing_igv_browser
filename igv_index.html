@@ -1,0 +1,303 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Mar 13 17:19:52 2026
+
+@author: mgaran
+"""
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sex-Specific Splicing · Genome Browser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/igv@3.0.2/dist/igv.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0b0e13;
+      --surface:  #131820;
+      --panel:    #181f2a;
+      --border:   #1f2b3a;
+      --text:     #c4cfdc;
+      --muted:    #4a5d72;
+      --accent:   #4fc3f7;
+      --mono:     'Space Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 20px;
+      height: 52px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .wordmark em { color: var(--muted); font-style: normal; font-weight: 400; }
+
+    .rule { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
+
+    /* ── Species tabs ── */
+    .species-row { display: flex; align-items: center; gap: 8px; }
+    .species-row label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .tab-group { display: flex; gap: 3px; }
+    .tab {
+      padding: 4px 12px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.12s;
+      white-space: nowrap;
+    }
+    .tab:hover { border-color: var(--accent); color: var(--accent); }
+    .tab.active { background: #163a52; border-color: var(--accent); color: var(--accent); }
+
+    /* ── Legend ── */
+    .legend {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .legend-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .grad-wrap { display: flex; flex-direction: column; gap: 2px; }
+    .grad-bar { width: 100px; height: 8px; border-radius: 2px; background: linear-gradient(to right, #0000ff, #800080, #ff0000); }
+    .grad-ticks { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 8px; color: var(--muted); }
+
+    /* ── Track key ── */
+    .track-key {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 20px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .key-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+    .pill {
+      display: flex; align-items: center; gap: 5px;
+      padding: 2px 9px; border-radius: 20px;
+      border: 1px solid var(--border); background: var(--surface);
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; color: var(--text);
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Status bar ── */
+    #status {
+      display: flex; align-items: center; gap: 7px;
+      padding: 5px 20px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      font-family: var(--mono); font-size: 10px; color: var(--muted); min-height: 28px;
+    }
+    .blink { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .blink.idle { background: var(--muted); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .blink:not(.idle) { animation: pulse 1.2s ease-in-out infinite; }
+
+    /* ── IGV container ── */
+    #igv-div { padding: 14px 20px; }
+
+    /* ── IGV chrome overrides ── */
+    .igv-root-div { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: 5px !important; overflow: hidden !important; }
+    .igv-navbar { background: var(--panel) !important; border-bottom: 1px solid var(--border) !important; }
+    .igv-navbar-genome-id { color: var(--accent) !important; font-family: var(--mono) !important; font-size: 10px !important; }
+    .igv-search-input { background: var(--bg) !important; color: var(--text) !important; border: 1px solid var(--border) !important; border-radius: 3px !important; font-family: var(--mono) !important; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wordmark">IGV <em>·</em> Sex-Specific Splicing</div>
+    <div class="rule"></div>
+    <div class="species-row">
+      <label>Species</label>
+      <div class="tab-group" id="tabs">
+        <button class="tab active" data-sp="dmel">D. mel</button>
+        <button class="tab"        data-sp="dsim">D. sim</button>
+        <button class="tab"        data-sp="dser">D. ser</button>
+        <button class="tab"        data-sp="dsan">D. san</button>
+        <button class="tab"        data-sp="dyak">D. yak</button>
+      </div>
+    </div>
+    <div class="legend">
+      <div>
+        <div class="legend-label">Effect size (♀ − ♂)</div>
+        <div class="grad-wrap" style="margin-top:3px;">
+          <div class="grad-bar"></div>
+          <div class="grad-ticks"><span>−9</span><span>0</span><span>+9</span></div>
+        </div>
+      </div>
+      <div style="width:1px;height:28px;background:var(--border);"></div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.8;">
+        <div><span style="color:#b4b4b4;">■</span> No effect size data</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="track-key">
+    <span class="key-label">Tracks</span>
+    <div class="pill"><div class="dot" style="background:#4fc3f7;"></div>UJCanno — annotated UJCs</div>
+    <div class="pill"><div class="dot" style="background:#a78bfa;"></div>ERPanno — annotated ERPs</div>
+    <div class="pill"><div class="dot" style="background:#f87171;"></div>ERPnovel — novel ERPs</div>
+  </div>
+
+  <div id="status">
+    <div class="blink" id="blink"></div>
+    <span id="status-text">Initializing…</span>
+  </div>
+
+  <div id="igv-div"></div>
+
+  <script>
+    const BASE = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv_bedfiles/';
+
+    // dmel uses IGV.js built-in dm6 genome.
+    // dsim uses IGV.js built-in droSim2 genome.
+    //   --> If droSim2 fails to load, generate a dsim chrom sizes file on HPG the
+    //       same way you made the others, upload it, and replace 'droSim2' with:
+    //       { id: 'dsim2', name: 'D. simulans r2', chromSizesURL: BASE + 'dsim2_chrom.sizes' }
+    // dser, dsan, dyak use chrom sizes files (no FASTA needed).
+
+    const SPECIES = {
+      dmel: {
+        label: 'D. melanogaster r6',
+        genome: 'dm6',
+        beds: [
+          { name: 'UJCanno',  url: BASE + 'dmel_UJCanno_on_dmel6.bed'  },
+          { name: 'ERPanno',  url: BASE + 'dmel_ERPanno_on_dmel6.bed'  },
+          { name: 'ERPnovel', url: BASE + 'dmel_ERPnovel_on_dmel6.bed' },
+        ],
+      },
+      dsim: {
+        label: 'D. simulans r2',
+        genome: 'droSim2',
+        beds: [
+          { name: 'UJCanno',  url: BASE + 'dsim_UJCanno_on_dsim2.bed'  },
+          { name: 'ERPanno',  url: BASE + 'dsim_ERPanno_on_dsim2.bed'  },
+          { name: 'ERPnovel', url: BASE + 'dsim_ERPnovel_on_dsim2.bed' },
+        ],
+      },
+      dser: {
+        label: 'D. serrata r1',
+        genome: { id: 'dser1', name: 'D. serrata r1', chromSizesURL: BASE + 'dser1_chrom.sizes' },
+        beds: [
+          { name: 'UJCanno',  url: BASE + 'dser_UJCanno_on_dser1.bed'  },
+          { name: 'ERPanno',  url: BASE + 'dser_ERPanno_on_dser1.bed'  },
+          { name: 'ERPnovel', url: BASE + 'dser_ERPnovel_on_dser1.bed' },
+        ],
+      },
+      dsan: {
+        label: 'D. santomea r1',
+        genome: { id: 'dsan1', name: 'D. santomea r1', chromSizesURL: BASE + 'dsan1_chrom.sizes' },
+        beds: [
+          { name: 'UJCanno',  url: BASE + 'dsan_UJCanno_on_dsan1.bed'  },
+          { name: 'ERPanno',  url: BASE + 'dsan_ERPanno_on_dsan1.bed'  },
+          { name: 'ERPnovel', url: BASE + 'dsan_ERPnovel_on_dsan1.bed' },
+        ],
+      },
+      dyak: {
+        label: 'D. yakuba r2',
+        genome: { id: 'dyak2', name: 'D. yakuba r2', chromSizesURL: BASE + 'dyak2_chrom.sizes' },
+        beds: [
+          { name: 'UJCanno',  url: BASE + 'dyak_UJCanno_on_dyak2.bed'  },
+          { name: 'ERPanno',  url: BASE + 'dyak_ERPanno_on_dyak2.bed'  },
+          { name: 'ERPnovel', url: BASE + 'dyak_ERPnovel_on_dyak2.bed' },
+        ],
+      },
+    };
+
+    const TRACK_COLOR = { UJCanno: '#4fc3f7', ERPanno: '#a78bfa', ERPnovel: '#f87171' };
+
+    let browser = null;
+    let current = 'dmel';
+
+    function setStatus(msg, loading) {
+      document.getElementById('status-text').textContent = msg;
+      document.getElementById('blink').className = 'blink' + (loading ? '' : ' idle');
+    }
+
+    async function loadSpecies(key) {
+      const sp  = SPECIES[key];
+      const div = document.getElementById('igv-div');
+      setStatus('Loading ' + sp.label + '…', true);
+
+      if (browser) { igv.removeAllBrowsers(); div.innerHTML = ''; browser = null; }
+
+      const tracks = sp.beds.map(b => ({
+        type:        'annotation',
+        format:      'bed',
+        url:         b.url,
+        name:        b.name,
+        displayMode: 'EXPANDED',
+        color:       TRACK_COLOR[b.name] || '#888',
+      }));
+
+      try {
+        browser = await igv.createBrowser(div, { genome: sp.genome, tracks });
+        setStatus(sp.label + ' · 3 tracks loaded', false);
+      } catch (err) {
+        console.error(err);
+        setStatus('Error loading ' + sp.label + ': ' + err.message, false);
+      }
+    }
+
+    document.getElementById('tabs').addEventListener('click', e => {
+      const btn = e.target.closest('.tab');
+      if (!btn || btn.dataset.sp === current) return;
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      current = btn.dataset.sp;
+      loadSpecies(current);
+    });
+
+    loadSpecies('dmel');
+  </script>
+
+</body>
+</html>
