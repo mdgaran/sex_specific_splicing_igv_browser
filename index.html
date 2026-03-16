@@ -274,7 +274,8 @@ const BASE = 'https://zenodo.org/records/19055836/files/';
       const tracks = sp.beds.map(b => ({
         type:        'annotation',
         format:      'bed',
-        url:         b.url,
+    //  url:         b.url,
+        url: b.url + '?download=1',
         name:        b.name,
         displayMode: 'EXPANDED',
         color:       TRACK_COLOR[b.name] || '#888',
