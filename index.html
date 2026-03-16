@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 13 17:19:52 2026
-
-@author: mgaran
-"""
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,61 +187,87 @@ Created on Fri Mar 13 17:19:52 2026
   <div id="igv-div"></div>
 
   <script>
-  
-// const BASE = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv/';
-const BASE = 'https://zenodo.org/records/19055836/files/';
+
+    // ── Data source URLs ──────────────────────────────────────────────────────
+    //
+    // UJCanno BED files and chrom sizes are hosted on GitHub (same domain, no CORS issues).
+    // ERPanno and ERPnovel BED files are hosted on Zenodo (CORS pending) and on HPG (CORS pending).
+    //
+    // Once CORS is fixed on HPG (bio.rc.ufl.edu), swap the Zenodo URLs below back to:
+    // const HPG = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv/';
+    // and replace the Zenodo URLs with: HPG + '<filename>.bed'
+    //
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // const HPG    = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv/';
+    const ZENODO = 'https://zenodo.org/records/19055836/files/';
+    const GITHUB_UJCANNO  = 'UJCanno_tracks/';
+    const GITHUB_CHROMSZ  = 'chromosome_sizes/';
 
     // dmel uses IGV.js built-in dm6 genome.
     // dsim uses IGV.js built-in droSim2 genome.
-    //   --> If droSim2 fails to load, generate a dsim chrom sizes file on HPG the
-    //       same way you made the others, upload it, and replace 'droSim2' with:
-    //       { id: 'dsim2', name: 'D. simulans r2', chromSizesURL: BASE + 'dsim2_chrom.sizes' }
-    // dser, dsan, dyak use chrom sizes files (no FASTA needed).
+    //   --> If droSim2 fails to load, generate a dsim2_chrom.sizes file on HPG,
+    //       add it to the chromosome_sizes/ folder, and replace 'droSim2' with:
+    //       { id: 'dsim2', name: 'D. simulans r2', chromSizesURL: GITHUB_CHROMSZ + 'dsim2_chrom.sizes' }
+    // dser, dsan, dyak use chrom sizes files hosted on GitHub.
 
     const SPECIES = {
       dmel: {
         label: 'D. melanogaster r6',
         genome: 'dm6',
         beds: [
-          { name: 'UJCanno',  url: BASE + 'dmel_UJCanno_on_dmel6.bed'  },
-          { name: 'ERPanno',  url: BASE + 'dmel_ERPanno_on_dmel6.bed'  },
-          { name: 'ERPnovel', url: BASE + 'dmel_ERPnovel_on_dmel6.bed' },
+          { name: 'UJCanno',  url: GITHUB_UJCANNO + 'dmel_UJCanno_on_dmel6.bed'       },
+          { name: 'ERPanno',  url: ZENODO + 'dmel_ERPanno_on_dmel6.bed?download=1'     },
+          // { name: 'ERPanno',  url: HPG + 'dmel_ERPanno_on_dmel6.bed'                },
+          { name: 'ERPnovel', url: ZENODO + 'dmel_ERPnovel_on_dmel6.bed?download=1'    },
+          // { name: 'ERPnovel', url: HPG + 'dmel_ERPnovel_on_dmel6.bed'               },
         ],
       },
       dsim: {
         label: 'D. simulans r2',
         genome: 'droSim2',
         beds: [
-          { name: 'UJCanno',  url: BASE + 'dsim_UJCanno_on_dsim2.bed'  },
-          { name: 'ERPanno',  url: BASE + 'dsim_ERPanno_on_dsim2.bed'  },
-          { name: 'ERPnovel', url: BASE + 'dsim_ERPnovel_on_dsim2.bed' },
+          { name: 'UJCanno',  url: GITHUB_UJCANNO + 'dsim_UJCanno_on_dsim2.bed'       },
+          { name: 'ERPanno',  url: ZENODO + 'dsim_ERPanno_on_dsim2.bed?download=1'     },
+          // { name: 'ERPanno',  url: HPG + 'dsim_ERPanno_on_dsim2.bed'                },
+          { name: 'ERPnovel', url: ZENODO + 'dsim_ERPnovel_on_dsim2.bed?download=1'    },
+          // { name: 'ERPnovel', url: HPG + 'dsim_ERPnovel_on_dsim2.bed'               },
         ],
       },
       dser: {
         label: 'D. serrata r1',
-        genome: { id: 'dser1', name: 'D. serrata r1', chromSizesURL: BASE + 'dser1_chrom.sizes' },
+        genome: { id: 'dser1', name: 'D. serrata r1', chromSizesURL: GITHUB_CHROMSZ + 'dser1_chrom.sizes' },
+        // genome: { id: 'dser1', name: 'D. serrata r1', chromSizesURL: HPG + 'dser1_chrom.sizes' },
         beds: [
-          { name: 'UJCanno',  url: BASE + 'dser_UJCanno_on_dser1.bed'  },
-          { name: 'ERPanno',  url: BASE + 'dser_ERPanno_on_dser1.bed'  },
-          { name: 'ERPnovel', url: BASE + 'dser_ERPnovel_on_dser1.bed' },
+          { name: 'UJCanno',  url: GITHUB_UJCANNO + 'dser_UJCanno_on_dser1.bed'       },
+          { name: 'ERPanno',  url: ZENODO + 'dser_ERPanno_on_dser1.bed?download=1'     },
+          // { name: 'ERPanno',  url: HPG + 'dser_ERPanno_on_dser1.bed'                },
+          { name: 'ERPnovel', url: ZENODO + 'dser_ERPnovel_on_dser1.bed?download=1'    },
+          // { name: 'ERPnovel', url: HPG + 'dser_ERPnovel_on_dser1.bed'               },
         ],
       },
       dsan: {
         label: 'D. santomea r1',
-        genome: { id: 'dsan1', name: 'D. santomea r1', chromSizesURL: BASE + 'dsan1_chrom.sizes' },
+        genome: { id: 'dsan1', name: 'D. santomea r1', chromSizesURL: GITHUB_CHROMSZ + 'dsan1_chrom.sizes' },
+        // genome: { id: 'dsan1', name: 'D. santomea r1', chromSizesURL: HPG + 'dsan1_chrom.sizes' },
         beds: [
-          { name: 'UJCanno',  url: BASE + 'dsan_UJCanno_on_dsan1.bed'  },
-          { name: 'ERPanno',  url: BASE + 'dsan_ERPanno_on_dsan1.bed'  },
-          { name: 'ERPnovel', url: BASE + 'dsan_ERPnovel_on_dsan1.bed' },
+          { name: 'UJCanno',  url: GITHUB_UJCANNO + 'dsan_UJCanno_on_dsan1.bed'       },
+          { name: 'ERPanno',  url: ZENODO + 'dsan_ERPanno_on_dsan1.bed?download=1'     },
+          // { name: 'ERPanno',  url: HPG + 'dsan_ERPanno_on_dsan1.bed'                },
+          { name: 'ERPnovel', url: ZENODO + 'dsan_ERPnovel_on_dsan1.bed?download=1'    },
+          // { name: 'ERPnovel', url: HPG + 'dsan_ERPnovel_on_dsan1.bed'               },
         ],
       },
       dyak: {
         label: 'D. yakuba r2',
-        genome: { id: 'dyak2', name: 'D. yakuba r2', chromSizesURL: BASE + 'dyak2_chrom.sizes' },
+        genome: { id: 'dyak2', name: 'D. yakuba r2', chromSizesURL: GITHUB_CHROMSZ + 'dyak2_chrom.sizes' },
+        // genome: { id: 'dyak2', name: 'D. yakuba r2', chromSizesURL: HPG + 'dyak2_chrom.sizes' },
         beds: [
-          { name: 'UJCanno',  url: BASE + 'dyak_UJCanno_on_dyak2.bed'  },
-          { name: 'ERPanno',  url: BASE + 'dyak_ERPanno_on_dyak2.bed'  },
-          { name: 'ERPnovel', url: BASE + 'dyak_ERPnovel_on_dyak2.bed' },
+          { name: 'UJCanno',  url: GITHUB_UJCANNO + 'dyak_UJCanno_on_dyak2.bed'       },
+          { name: 'ERPanno',  url: ZENODO + 'dyak_ERPanno_on_dyak2.bed?download=1'     },
+          // { name: 'ERPanno',  url: HPG + 'dyak_ERPanno_on_dyak2.bed'                },
+          { name: 'ERPnovel', url: ZENODO + 'dyak_ERPnovel_on_dyak2.bed?download=1'    },
+          // { name: 'ERPnovel', url: HPG + 'dyak_ERPnovel_on_dyak2.bed'               },
         ],
       },
     };
@@ -274,8 +292,7 @@ const BASE = 'https://zenodo.org/records/19055836/files/';
       const tracks = sp.beds.map(b => ({
         type:        'annotation',
         format:      'bed',
-    //  url:         b.url,
-        url: b.url + '?download=1',
+        url:         b.url,
         name:        b.name,
         displayMode: 'EXPANDED',
         color:       TRACK_COLOR[b.name] || '#888',
