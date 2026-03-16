@@ -299,14 +299,15 @@
 
       if (browser) { igv.removeAllBrowsers(); div.innerHTML = ''; browser = null; }
 
-      const tracks = sp.beds.map(b => ({
-        type:        'annotation',
-        format:      'bed',
-        url:         b.url,
-        name:        b.name,
-        displayMode: 'EXPANDED',
-        color:       TRACK_COLOR[b.name] || '#888',
-      }));
+    const tracks = sp.beds.map(b => ({
+      type:        'annotation',
+      format:      'bed',
+      url:         b.url,
+      name:        b.name,
+      displayMode: 'EXPANDED',
+      color:       TRACK_COLOR[b.name] || '#888',
+      colorBy:     'rgb',
+    }));
 
       try {
         browser = await igv.createBrowser(div, { genome: sp.genome, tracks });
