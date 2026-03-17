@@ -197,13 +197,14 @@
     // ─────────────────────────────────────────────────────────────────────────
 
     const HPG = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv/';
+    const GIT = 'https://github.com/mdgaran/sex_specific_splicing_igv_browser/tree/main/';
 
     const SPECIES = {
       dmel: {
         label: 'D. melanogaster r6',
         genome: 'dm6',
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dmel_UJCanno_on_dmel6.bed' },
+          { name: 'UJCanno',  url: GIT + 'UJCanno_tracks/dmel_UJCanno_on_dmel6.bed' },
           { name: 'ERPanno',  url: HPG + 'dmel_ERPanno_on_dmel6.bed'          },
           { name: 'ERPnovel', url: HPG + 'dmel_ERPnovel_on_dmel6.bed'         },
         ],
@@ -214,7 +215,7 @@
         // If droSim2 fails, generate dsim2_chrom.sizes on HPG and replace 'droSim2' with:
         // { id: 'dsim2', name: 'D. simulans r2', chromSizesURL: 'chromosome_sizes/dsim2_chrom.sizes' }
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dsim_UJCanno_on_dsim2.bed' },
+          { name: 'UJCanno',  url: GIT + 'UJCanno_tracks/dsim_UJCanno_on_dsim2.bed' },
           { name: 'ERPanno',  url: HPG + 'dsim_ERPanno_on_dsim2.bed'          },
           { name: 'ERPnovel', url: HPG + 'dsim_ERPnovel_on_dsim2.bed'         },
         ],
@@ -227,7 +228,7 @@
           chromSizesURL: 'chromosome_sizes/dser1_chrom.sizes',
         },
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dser_UJCanno_on_dser1.bed' },
+          { name: 'UJCanno',  url: GIT + 'UJCanno_tracks/dser_UJCanno_on_dser1.bed' },
           { name: 'ERPanno',  url: HPG + 'dser_ERPanno_on_dser1.bed'          },
           { name: 'ERPnovel', url: HPG + 'dser_ERPnovel_on_dser1.bed'         },
         ],
@@ -240,7 +241,7 @@
           chromSizesURL: 'chromosome_sizes/dsan1_chrom.sizes',
         },
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dsan_UJCanno_on_dsan1.bed' },
+          { name: 'UJCanno',  url: GIT + 'UJCanno_tracks/dsan_UJCanno_on_dsan1.bed' },
           { name: 'ERPanno',  url: HPG + 'dsan_ERPanno_on_dsan1.bed'          },
           { name: 'ERPnovel', url: HPG + 'dsan_ERPnovel_on_dsan1.bed'         },
         ],
@@ -253,7 +254,7 @@
           chromSizesURL: 'chromosome_sizes/dyak2_chrom.sizes',
         },
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dyak_UJCanno_on_dyak2.bed' },
+          { name: 'UJCanno',  url: GIT + 'UJCanno_tracks/dyak_UJCanno_on_dyak2.bed' },
           { name: 'ERPanno',  url: HPG + 'dyak_ERPanno_on_dyak2.bed'          },
           { name: 'ERPnovel', url: HPG + 'dyak_ERPnovel_on_dyak2.bed'         },
         ],
