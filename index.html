@@ -190,29 +190,22 @@
 
     // ── Data sources ──────────────────────────────────────────────────────────
     //
-    // UJCanno bed files and chrom sizes are hosted on GitHub (same domain, no CORS issue).
-    // ERPanno and ERPnovel are hosted on Zenodo (large files, >100MB GitHub limit).
-    //   --> Once CORS is fixed on bio.rc.ufl.edu, swap Zenodo URLs for HPG URLs below.
+    // UJCanno BED files and chrom sizes are hosted on GitHub (same domain, no CORS issue).
+    // ERPanno and ERPnovel BED files are hosted on HPG (too large for GitHub).
+    // HPG requires CORS to be enabled — contact UFIT if ERP tracks stop loading.
     //
-    // HPG base URL (commented out until CORS is resolved):
-     const HPG = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv/';
-    //
-    // Zenodo base URL:
-    // const ZENODO = 'https://zenodo.org/records/19055836/files/';
-
     // ─────────────────────────────────────────────────────────────────────────
+
+    const HPG = 'https://bio.rc.ufl.edu/pub/mcintyre/sex_specific_splicing/igv/';
 
     const SPECIES = {
       dmel: {
         label: 'D. melanogaster r6',
         genome: 'dm6',
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dmel_UJCanno_on_dmel6.bed'         },
-          // { name: 'UJCanno',  url: HPG + 'dmel_UJCanno_on_dmel6.bed'                },
-          { name: 'ERPanno',  url: HPG + 'dmel_ERPanno_on_dmel6.bed?download=1'    },
-          // { name: 'ERPanno',  url: HPG + 'dmel_ERPanno_on_dmel6.bed'               },
-          { name: 'ERPnovel', url: HPG + 'dmel_ERPnovel_on_dmel6.bed?download=1'   },
-          // { name: 'ERPnovel', url: HPG + 'dmel_ERPnovel_on_dmel6.bed'              },
+          { name: 'UJCanno',  url: 'UJCanno_tracks/dmel_UJCanno_on_dmel6.bed' },
+          { name: 'ERPanno',  url: HPG + 'dmel_ERPanno_on_dmel6.bed'          },
+          { name: 'ERPnovel', url: HPG + 'dmel_ERPnovel_on_dmel6.bed'         },
         ],
       },
       dsim: {
@@ -221,12 +214,9 @@
         // If droSim2 fails, generate dsim2_chrom.sizes on HPG and replace 'droSim2' with:
         // { id: 'dsim2', name: 'D. simulans r2', chromSizesURL: 'chromosome_sizes/dsim2_chrom.sizes' }
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dsim_UJCanno_on_dsim2.bed'         },
-          // { name: 'UJCanno',  url: HPG + 'dsim_UJCanno_on_dsim2.bed'                },
-          { name: 'ERPanno',  url: HPG + 'dsim_ERPanno_on_dsim2.bed?download=1'    },
-          // { name: 'ERPanno',  url: HPG + 'dsim_ERPanno_on_dsim2.bed'               },
-          { name: 'ERPnovel', url: HPG + 'dsim_ERPnovel_on_dsim2.bed?download=1'   },
-          // { name: 'ERPnovel', url: HPG + 'dsim_ERPnovel_on_dsim2.bed'              },
+          { name: 'UJCanno',  url: 'UJCanno_tracks/dsim_UJCanno_on_dsim2.bed' },
+          { name: 'ERPanno',  url: HPG + 'dsim_ERPanno_on_dsim2.bed'          },
+          { name: 'ERPnovel', url: HPG + 'dsim_ERPnovel_on_dsim2.bed'         },
         ],
       },
       dser: {
@@ -235,15 +225,11 @@
           id: 'dser1',
           name: 'D. serrata r1',
           chromSizesURL: 'chromosome_sizes/dser1_chrom.sizes',
-          // chromSizesURL: HPG + 'dser1_chrom.sizes',
         },
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dser_UJCanno_on_dser1.bed'         },
-          // { name: 'UJCanno',  url: HPG + 'dser_UJCanno_on_dser1.bed'                },
-          { name: 'ERPanno',  url: HPG + 'dser_ERPanno_on_dser1.bed?download=1'    },
-          // { name: 'ERPanno',  url: HPG + 'dser_ERPanno_on_dser1.bed'               },
-          { name: 'ERPnovel', url: HPG + 'dser_ERPnovel_on_dser1.bed?download=1'   },
-          // { name: 'ERPnovel', url: HPG + 'dser_ERPnovel_on_dser1.bed'              },
+          { name: 'UJCanno',  url: 'UJCanno_tracks/dser_UJCanno_on_dser1.bed' },
+          { name: 'ERPanno',  url: HPG + 'dser_ERPanno_on_dser1.bed'          },
+          { name: 'ERPnovel', url: HPG + 'dser_ERPnovel_on_dser1.bed'         },
         ],
       },
       dsan: {
@@ -252,15 +238,11 @@
           id: 'dsan1',
           name: 'D. santomea r1',
           chromSizesURL: 'chromosome_sizes/dsan1_chrom.sizes',
-          // chromSizesURL: HPG + 'dsan1_chrom.sizes',
         },
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dsan_UJCanno_on_dsan1.bed'         },
-          // { name: 'UJCanno',  url: HPG + 'dsan_UJCanno_on_dsan1.bed'                },
-          { name: 'ERPanno',  url: HPG + 'dsan_ERPanno_on_dsan1.bed?download=1'    },
-          // { name: 'ERPanno',  url: HPG + 'dsan_ERPanno_on_dsan1.bed'               },
-          { name: 'ERPnovel', url: HPG + 'dsan_ERPnovel_on_dsan1.bed?download=1'   },
-          // { name: 'ERPnovel', url: HPG + 'dsan_ERPnovel_on_dsan1.bed'              },
+          { name: 'UJCanno',  url: 'UJCanno_tracks/dsan_UJCanno_on_dsan1.bed' },
+          { name: 'ERPanno',  url: HPG + 'dsan_ERPanno_on_dsan1.bed'          },
+          { name: 'ERPnovel', url: HPG + 'dsan_ERPnovel_on_dsan1.bed'         },
         ],
       },
       dyak: {
@@ -269,20 +251,14 @@
           id: 'dyak2',
           name: 'D. yakuba r2',
           chromSizesURL: 'chromosome_sizes/dyak2_chrom.sizes',
-          // chromSizesURL: HPG + 'dyak2_chrom.sizes',
         },
         beds: [
-          { name: 'UJCanno',  url: 'UJCanno_tracks/dyak_UJCanno_on_dyak2.bed'         },
-          // { name: 'UJCanno',  url: HPG + 'dyak_UJCanno_on_dyak2.bed'                },
-          { name: 'ERPanno',  url: HPG + 'dyak_ERPanno_on_dyak2.bed?download=1'    },
-          // { name: 'ERPanno',  url: HPG + 'dyak_ERPanno_on_dyak2.bed'               },
-          { name: 'ERPnovel', url: HPG + 'dyak_ERPnovel_on_dyak2.bed?download=1'   },
-          // { name: 'ERPnovel', url: HPG + 'dyak_ERPnovel_on_dyak2.bed'              },
+          { name: 'UJCanno',  url: 'UJCanno_tracks/dyak_UJCanno_on_dyak2.bed' },
+          { name: 'ERPanno',  url: HPG + 'dyak_ERPanno_on_dyak2.bed'          },
+          { name: 'ERPnovel', url: HPG + 'dyak_ERPnovel_on_dyak2.bed'         },
         ],
       },
     };
-
-    const TRACK_COLOR = { UJCanno: '#4fc3f7', ERPanno: '#a78bfa', ERPnovel: '#f87171' };
 
     let browser = null;
     let current = 'dmel';
@@ -299,13 +275,13 @@
 
       if (browser) { igv.removeAllBrowsers(); div.innerHTML = ''; browser = null; }
 
-    const tracks = sp.beds.map(b => ({
-      type:        'annotation',
-      format:      'bed',
-      url:         b.url,
-      name:        b.name,
-      displayMode: 'EXPANDED',
-    }));
+      const tracks = sp.beds.map(b => ({
+        type:        'annotation',
+        format:      'bed',
+        url:         b.url,
+        name:        b.name,
+        displayMode: 'EXPANDED',
+      }));
 
       try {
         browser = await igv.createBrowser(div, { genome: sp.genome, tracks });
